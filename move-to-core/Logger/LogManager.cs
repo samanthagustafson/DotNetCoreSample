@@ -1,45 +1,52 @@
-﻿/*using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System;
 using System.Web;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Serilog;
+using Serilog.Formatting.Json;
+using Serilog.Sinks.Http.Private.Network;
+using SerilogLogger = Serilog.Core.Logger;
 
-namespace move_to_core.Logger
+namespace MoveToCore.Logger
 {
     public class LogManager
     {
-        private const string EVENT_SOURCE = "dchecks";
-        private const string EVENT_LOG = "DCheks";
+        private readonly SerilogLogger _logger;
 
-        public static void WriteException(Exception ex)
+        public static LogManager Instance;
+
+        static LogManager()
         {
-            EnsureSource();
-
-            EventLog.WriteEntry(EVENT_SOURCE, FormatException(ex), EventLogEntryType.Error);
+            Instance = new LogManager();
         }
 
-        private static void EnsureSource()
+        private LogManager()
         {
-            if (!EventLog.SourceExists(EVENT_SOURCE))
+            _logger = new LoggerConfiguration()
+                .WriteTo.Http("http://10.0.75.1:5000", httpClient: new LoggerHttpClient())
+                .CreateLogger();
+        }
+
+        public void WriteException(Exception ex)
+        {
+            _logger.Error(HttpUtility.UrlEncode(JsonConvert.SerializeObject(new
             {
-                EventLog.CreateEventSource(EVENT_SOURCE, EVENT_LOG);
-            }
+                Date = DateTime.Now,
+                Type = ex.GetType().Name,
+                ex.Message,
+                ex.StackTrace,
+                InnerException = ex.InnerException != null ? SerializeInnerException(ex.InnerException) : null
+            })));
         }
 
-        private static string FormatException(Exception ex)
+        private object SerializeInnerException(Exception ex)
         {
-            var baseExceptionFormating =
-                $"Exception Type: {ex.GetType()}\r\nMessage: {ex.Message}\r\nThrown at: {DateTime.Now}\r\nAdditonal Data: {ex.Data}\r\nStack Trace: {ex.StackTrace}";
-
-            if (ex.InnerException == null)
+            return new
             {
-                return baseExceptionFormating;
-            }
-
-            return
-                $"{baseExceptionFormating}\r\n----------------------------------------------------------------\r\nInner Exception: {FormatException(ex.InnerException)}";
+                Type = ex.GetType().Name,
+                ex.Message,
+                ex.StackTrace,
+                InnerException = ex.InnerException != null ? SerializeInnerException(ex.InnerException) : null
+            };
         }
-
     }
-}*/
+}

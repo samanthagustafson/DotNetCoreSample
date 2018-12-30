@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -52,6 +54,19 @@ namespace MoveToCore.Controllers
             TestCollection.Remove(Query<Test>.EQ(x => x.Id, ObjectId.Parse(id)));
 
             return Ok();
+        }
+
+        [HttpGet("Exception")]
+        public void Exception()
+        {
+            var exceptions = new List<Exception>()
+            {
+                new Exception("Oh noo!!!", new NullReferenceException()),
+                new ArgumentException("The argument Wow dose not exist ;("),
+                new NullReferenceException(),
+            };
+
+            throw exceptions[new Random().Next(exceptions.Count)];
         }
     }
 }
