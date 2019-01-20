@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Web;
-using Newtonsoft.Json;
-using Serilog;
-using Serilog.Formatting.Json;
-using Serilog.Sinks.Http.Private.Network;
-using SerilogLogger = Serilog.Core.Logger;
+using MongoDB.Bson;
 
-namespace MoveToCore.Logger
+namespace MoveToCore.Loggers
 {
     public class LogManager
     {
-        private readonly SerilogLogger _logger;
+        private readonly ILogger _logger;
 
         public static LogManager Instance;
 
@@ -21,21 +16,24 @@ namespace MoveToCore.Logger
 
         private LogManager()
         {
-            _logger = new LoggerConfiguration()
-                .WriteTo.Http("http://10.0.75.1:5000", httpClient: new LoggerHttpClient())
-                .CreateLogger();
+            var isDirectLogstashLogging = Environment.GetEnvironmentVariable("IS_DIRECT_LOGSTASH_LOGGING");
+
+            _logger = string.IsNullOrEmpty(isDirectLogstashLogging) || !bool.Parse(isDirectLogstashLogging) ?
+                   (ILogger)new KafkaLogger() : new LogstashLogger();
         }
 
         public void WriteException(Exception ex)
         {
-            _logger.Error(HttpUtility.UrlEncode(JsonConvert.SerializeObject(new
+            var log = new
             {
-                Date = DateTime.Now,
-                Type = ex.GetType().Name,
+                Date = DateTime.Now.ToLongDateString(),
+                ExceptionType = ex.GetType().Name,
                 ex.Message,
                 ex.StackTrace,
                 InnerException = ex.InnerException != null ? SerializeInnerException(ex.InnerException) : null
-            })));
+            }.ToJson();
+
+            _logger.Write(log);
         }
 
         private object SerializeInnerException(Exception ex)
@@ -43,6 +41,7 @@ namespace MoveToCore.Logger
             return new
             {
                 Type = ex.GetType().Name,
+                ExceptionType = ex.GetType().Name,
                 ex.Message,
                 ex.StackTrace,
                 InnerException = ex.InnerException != null ? SerializeInnerException(ex.InnerException) : null

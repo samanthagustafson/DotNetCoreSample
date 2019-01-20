@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.IO;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MoveToCore.Logger;
+using Microsoft.Extensions.FileProviders;
+using MoveToCore.Loggers;
+using MoveToCore.SignalR;
 
 namespace MoveToCore
 {
@@ -23,6 +26,7 @@ namespace MoveToCore
                 options.Filters.Add<LoggerExceptionFilter>();
             });
 
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,6 +38,19 @@ namespace MoveToCore
             }
 
             app.UseMvc();
+
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "client")),
+                RequestPath = "/app",
+                DefaultContentType = "html"
+            });
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<DistributionHub>("/distribution");
+            });
         }   
     }
 }

@@ -1,13 +1,20 @@
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+
 WORKDIR /app
 EXPOSE 80
 
+ENV CONNECTION_STRING="13.94.175.88:27017,13.94.168.121:27018,13.81.214.106:27019"
+ENV KAFKA_HOST="13.94.175.88:9092"
+ENV LOGSTASH_HOST="172.20.224.1"
+ENV LOGSTASH_PORT="5000"
+
 FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src
-COPY ["move-to-core/MoveToCore.csproj", "move-to-core/"]
-RUN dotnet restore "move-to-core/MoveToCore.csproj"
+COPY ["libs", "."]
+COPY ["MoveToCore/MoveToCore.csproj", "MoveToCore/"]
+RUN dotnet restore "MoveToCore/MoveToCore.csproj"
 COPY . .
-WORKDIR "/src/move-to-core"
+WORKDIR "/src/MoveToCore"
 RUN dotnet build "MoveToCore.csproj" -c Release -o /app
 
 FROM build AS publish

@@ -1,0 +1,37 @@
+<md-toolbar class="md-whiteframe-2dp" layout="row" layout-align="start center">
+    <div layout="column" class="title">
+        <span class="md-title">Move To Core Wohoo!!!</span>
+        <span class="md-caption">We made it for you <3</span>
+    </div>
+</md-toolbar>
+<md-content layout="column" class="content">
+    <span class="md-headline">
+        List of tests:
+    </span>
+    <div layout="column" ng-repeat="test in tests">
+        <md-card class="md-padding item" layout="row">
+            <div flex>
+                <span class="md-subheader">Id:</span>
+                <span>{{test.id}}</span>
+            </div>
+            <div flex>
+                <span class="md-subheader">Message:</span>
+                <span>{{test.message}}</span>
+            </div>
+            <div flex>
+                <span class="md-subheader">Comments:</span>
+                <span>{{test.comments}}</span>
+            </div>
+            <div class="actions-container" layout="row" layout-align="start center">
+                <md-button class="md-icon-button" ng-click="openDeleteDialog(test)">
+                    <i class="mdi mdi-delete"></i>
+                </md-button>
+            </div>
+        </md-card>
+    </div>
+    <div class="add-new-container">
+        <md-button class="md-fab md-primary" ng-click="openSaveDialog()">
+            <i class="mdi mdi-plus"></i>
+        </md-button>
+    </div>
+</md-content>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace MoveToCore.Logger
+namespace MoveToCore.Loggers
 {
     public class LoggerExceptionFilter : ExceptionFilterAttribute
     {

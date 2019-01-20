@@ -1,0 +1,22 @@
+<md-dialog>
+    <form>
+        <md-dialog-content layout="column">
+            <md-toolbar class="md-primary md-whiteframe-1dp" layout="row" layout-align="start center" layout-padding>
+                Create Test
+            </md-toolbar>
+            <div layout-padding layout="column">
+                <md-input-container>
+                    <label>Message</label>
+                    <input ng-model="test.message">
+                </md-input-container>
+                <md-input-container>
+                    <label>Comments</label>
+                    <input ng-model="test.comments">
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions>
+            <md-button ng-click="save()" class="md-primary md-raised" type="submit">Save</md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
