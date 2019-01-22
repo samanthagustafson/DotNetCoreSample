@@ -22,6 +22,6 @@ RUN dotnet publish "MoveToCore.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
-COPY client/dist ./client
+COPY client/dist /client
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "MoveToCore.dll"]
