@@ -22,7 +22,7 @@ angular.module('movetocore')
             ///$locationProvider.html5Mode(true);
 
             $mdThemingProvider.theme('default')
-                .primaryPalette('blue')
+                .primaryPalette('red')
                 .accentPalette('deep-orange');
         }
     )

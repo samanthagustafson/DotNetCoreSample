@@ -28,7 +28,7 @@
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/test"
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/app/index.html"
     }
   }
 }
