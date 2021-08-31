@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
     <AssemblyName>MoveToCore</AssemblyName>
     <RootNamespace>MoveToCore</RootNamespace>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
