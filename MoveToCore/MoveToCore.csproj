@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
-    <RuntimeFrameworkVersion>1.0.0</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>2.2.0</RuntimeFrameworkVersion>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <AssemblyName>MoveToCore</AssemblyName>
     <RootNamespace>MoveToCore</RootNamespace>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -23,6 +24,7 @@
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Sinks.Network" Version="2.0.1.64" />
     <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
+    <PackageReference Update="Microsoft.NETCore.App" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
